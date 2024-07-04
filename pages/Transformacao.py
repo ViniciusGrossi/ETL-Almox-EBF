@@ -12,24 +12,25 @@ def process_file(uploaded_file):
     st.write(df.head())
     
     # Mover os valores da coluna 'QUANTIDADE' 3 posições para cima
-    df['QUANTIDADE'] = df['D'].shift(-3)
+    df['QUANTIDADE'] = df['C.A.'].shift(-3)
 
     # Criar coluna 'CODIGO' com valores que começam com '5' e têm exatamente 12 dígitos na coluna 'A'
-    df['CODIGO'] = df['A'].astype(str).str.extract(r'(\b5\d{11}\b)')
-    df_codigo = df.dropna(subset=['CODIGO'])
+    df['CODIGO'] = df['CODIGO'].astype(str).str.replace(r'\s0$', '', regex=True)
+    df['CÓDIGO'] = df['CODIGO'].astype(str).str.extract(r'(\b5\d{11}\b)')
+    df_codigo = df.dropna(subset=['CÓDIGO'])
     
     # Remover duplicatas na coluna 'CODIGO'
-    df_codigo = df_codigo.drop_duplicates(subset=['CODIGO'])
+    df_codigo = df_codigo.drop_duplicates(subset=['CÓDIGO'])
 
     # Criar coluna 'DESCRICAO' com valores da coluna 'B'
-    df_codigo['DESCRICAO'] = df_codigo['B'].str.strip()
+    df_codigo['DESCRICAO'] = df_codigo['DESCRICAO'].str.strip()
     df_codigo = df_codigo[df_codigo['DESCRICAO'] != '']
     df_codigo = df_codigo.dropna(subset=['DESCRICAO'])
 
     # Criar coluna 'ENDERECO' com valores que seguem a estrutura específica na coluna 'A'
-    df['ENDERECO'] = df['A'].astype(str)
+    df['ENDERECO'] = df['CODIGO'].astype(str)
     df_endereco = df[~df['ENDERECO'].str.startswith(('E', 'N', '5'), na=False)]
-    df_endereco['ENDERECO'] = df_endereco['ENDERECO'].str.replace(r'\.0+', '', regex=True)
+    df_endereco['ENDERECO'] = df_endereco['ENDERECO'].str.replace(' 0,00000', '')
 
     # Garantir que ambos os DataFrames têm o mesmo índice para permitir a junção correta
     df_codigo = df_codigo.reset_index(drop=True)
@@ -54,16 +55,16 @@ def adjust_quantities(base_file, update_file):
         st.write("Primeiras linhas do arquivo de atualização:")
         st.write(df_update.head())
 
-        # Garantir que a coluna 'CODIGO' está no formato correto e não tem duplicatas
-        df_base['CODIGO'] = df_base['CODIGO'].astype(str).str.replace(r'\.0+$', '', regex=True)
-        df_update['CODIGO'] = df_update['CODIGO'].astype(str).str.replace(r'\.0+$', '', regex=True)
-        df_update = df_update.drop_duplicates(subset=['CODIGO'])
+        # Garantir que a coluna 'DESCRICAO' está no formato correto e não tem duplicatas
+        df_base['DESCRICAO'] = df_base['DESCRICAO'].astype(str).str.replace(r'\.0+$', '', regex=True)
+        df_update['DESCRICAO'] = df_update['DESCRICAO'].astype(str).str.replace(r'\.0+$', '', regex=True)
+        df_update = df_update.drop_duplicates(subset=['DESCRICAO'])
         
         # Criar um dicionário de atualização de quantidades
-        update_dict = df_update.set_index('CODIGO')['QUANTIDADE'].to_dict()
+        update_dict = df_update.set_index('DESCRICAO')['QUANTIDADE'].to_dict()
         
         # Substituir os valores de 'QUANTIDADE' na base original com base nos valores do arquivo de atualização
-        df_base['QUANTIDADE'] = df_base['CODIGO'].map(update_dict).fillna(df_base['QUANTIDADE'])
+        df_base['QUANTIDADE'] = df_base['DESCRICAO'].map(update_dict).fillna(df_base['QUANTIDADE'])
         st.write("Após atualizar a coluna 'QUANTIDADE':")
         st.write(df_base.head())
     
