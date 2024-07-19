@@ -13,6 +13,12 @@ def process_file(uploaded_file):
     
     # Mover os valores da coluna 'QUANTIDADE' 3 posições para cima
     df['QUANTIDADE'] = df['C.A.'].shift(-3)
+    
+    # Remover linhas em branco na coluna 'CODIGO'
+    df = df.dropna(subset=['CODIGO'])
+    
+    # Remover linhas onde 'CODIGO' começa com '0'
+    df = df[~df['CODIGO'].astype(str).str.startswith('0')]
 
     # Criar coluna 'CODIGO' com valores que começam com '5' e têm exatamente 12 dígitos na coluna 'A'
     df['CODIGO'] = df['CODIGO'].astype(str).str.replace(r'\s0$', '', regex=True)
