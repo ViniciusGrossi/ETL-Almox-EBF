@@ -92,7 +92,7 @@ def main():
     st.title("Sistema de Limpeza e Transformação de Dados")
 
     # Criação de abas
-    tab1, tab2, tab3, tab4 = st.tabs(["Transformação", "Ajuste de quantidade", "Atualização de Referência", "Atualização de Colunas"])
+    tab1, tab2, tab3 = st.tabs(["Transformação", "Ajuste de quantidade","Atualização de Colunas"])
 
     with tab1:
         st.header("Transformação")
@@ -129,36 +129,6 @@ def main():
             )
 
     with tab3:
-        st.header("Atualização de Referência")
-        base_dados_file = st.file_uploader("Upload da base de dados original", type=["xlsx"], key="base_dados_tab3")
-        if base_dados_file is not None:
-            base_dados = pd.read_excel(base_dados_file)
-            st.write("Base de Dados Original:")
-            st.dataframe(base_dados)
-
-        tabela_referencia_file = st.file_uploader("Upload da tabela com a coluna referência atualizada", type=["xlsx"], key="tabela_referencia_tab3")
-        if tabela_referencia_file is not None:
-            tabela_referencia = pd.read_excel(tabela_referencia_file)
-            st.write("Tabela de Referência Atualizada:")
-            st.dataframe(tabela_referencia)
-
-        if base_dados_file is not None and tabela_referencia_file is not None:
-            if st.button("Atualizar Referência", key="update_button_tab3"):
-                base_dados = atualizar_referencia(base_dados, tabela_referencia)
-                st.success("A coluna REFERENCIA foi atualizada com sucesso!")
-                st.write("Base de Dados Atualizada:")
-                st.dataframe(base_dados)
-
-                updated_data = to_excel(base_dados)
-                
-                st.download_button(
-                    label="Baixar Base de Dados Atualizada",
-                    data=updated_data,
-                    file_name="base_dados_atualizada.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-
-    with tab4:
         st.header("Atualização de Colunas")
 
         base_dados_file = st.file_uploader("Upload da base de dados original", type=["xlsx"], key="base_dados_tab4")
