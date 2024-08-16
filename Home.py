@@ -34,7 +34,7 @@ if 'inconsistencias' not in st.session_state:
 
 with tab1:
     search_term = st.selectbox('Pesquisar por Descrição, Código ou Referência', [''] + descricoes + codigos + referencias, index=0)
-    search_term_lower = search_term.lower()
+    search_term_lower = str(search_term).lower()
 
     # Filtrar pelo termo de pesquisa em minúsculas
     df_filtered = df[(df['DESCRICAO'].str.lower().str.contains(search_term_lower, na=False)) | 
