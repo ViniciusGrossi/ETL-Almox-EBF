@@ -6,7 +6,7 @@ from datetime import datetime
 st.set_page_config('Consulta Estoque', layout='wide')
 
 # Carregar o arquivo Excel
-df = pd.read_excel('C:/Users/User/Documents/Data Analysis/Projeto_Estoque/Base_dados/Base_dados.xlsx')
+df = pd.read_excel('Base_dados.xlsx')
 
 df['ENDERECO'] = df['ENDERECO'].astype(str).str.strip()
 df['CODIGO'] = df['CODIGO'].astype(str)
