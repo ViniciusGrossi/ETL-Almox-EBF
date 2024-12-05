@@ -94,7 +94,7 @@ with tab2:
                         'Item_Selecionado': [selected_indices],
                         'Descricao': [selected_rows.iloc[0]['DESCRICAO']],
                         'Cód Marca': [selected_rows.iloc[0]['COD MARCA']],
-                        'U.N': [selected_rows.iloc[0]['U.N']],
+                        'UN': [selected_rows.iloc[0]['UN']],
                         'Codigo': [selected_rows.iloc[0]['CODIGO']],
                         'Tipo_Inconsistencia': [tipo_inconsistencia],
                         'Valor_Correto': [int(valor_correto)]
@@ -136,4 +136,3 @@ with tab3:
             )
     else:
         st.write('Nenhuma inconsistência registrada!')
-        
