@@ -72,13 +72,35 @@ def adjust_quantities(base_file, update_file):
 
 # Função para atualizar uma coluna específica baseada no mapeamento de CODIGO
 def atualizar_coluna_selecionada(base_dados, tabela_referencia, coluna):
-    # Criar um dicionário para mapear CODIGO para a coluna selecionada
-    mapa_referencia = dict(zip(tabela_referencia['CODIGO'], tabela_referencia[coluna]))
-    
-    # Atualizar a coluna selecionada na base de dados original
-    base_dados[coluna] = base_dados['CODIGO'].map(mapa_referencia)
+    """
+    Atualiza uma coluna na base de dados com base no mapeamento da tabela de referência.
+    Se a coluna a ser atualizada for 'CODIGO', usa 'DESCRICAO' como referência.
+
+    Args:
+        base_dados (pd.DataFrame): Base de dados original.
+        tabela_referencia (pd.DataFrame): Tabela de referência contendo as colunas 'CODIGO' e 'DESCRICAO'.
+        coluna (str): Nome da coluna a ser atualizada.
+
+    Returns:
+        pd.DataFrame: Base de dados com a coluna atualizada.
+    """
+    if coluna == 'CODIGO':
+        # Garantir unicidade em DESCRICAO na tabela de referência
+        tabela_referencia = tabela_referencia.drop_duplicates(subset=['DESCRICAO'])
+        
+        # Mapeamento de DESCRICAO para CODIGO
+        mapa_descricao_para_codigo = dict(zip(tabela_referencia['DESCRICAO'], tabela_referencia['CODIGO']))
+        base_dados['CODIGO'] = base_dados['DESCRICAO'].map(mapa_descricao_para_codigo).fillna(base_dados['CODIGO'])
+    else:
+        # Garantir unicidade em CODIGO na tabela de referência
+        tabela_referencia = tabela_referencia.drop_duplicates(subset=['CODIGO'])
+        
+        # Mapeamento de CODIGO para a coluna selecionada
+        mapa_referencia = dict(zip(tabela_referencia['CODIGO'], tabela_referencia[coluna]))
+        base_dados[coluna] = base_dados['CODIGO'].map(mapa_referencia).fillna(base_dados[coluna])
     
     return base_dados
+
 
 # Função para exportar DataFrame para Excel
 def to_excel(df):
