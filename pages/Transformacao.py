@@ -145,7 +145,7 @@ def main():
 
         colunas_selecionadas = st.multiselect(
             "Selecione as colunas que deseja atualizar:",
-            ['ENDERECO', 'QUANTIDADE', 'MARCA', 'REFERENCIA', 'UNIDADE MEDIDA', 'U.N', 'COD MARCA'],
+            ['CODIGO','ENDERECO', 'QUANTIDADE', 'MARCA', 'REFERENCIA', 'UNIDADE MEDIDA', 'UN', 'COD MARCA'],
             key="colunas_selecionadas_tab4"
         )
 
