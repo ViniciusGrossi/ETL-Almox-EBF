@@ -29,6 +29,7 @@ def process_file(uploaded_file):
 
     # Criar coluna 'ENDERECO' com valores que seguem a estrutura específica na coluna 'A'
     df['ENDERECO'] = df['CODIGO'].astype(str)
+    df_endereco = df[~df['ENDERECO'].str.startswith('9', na=False)]
     df_endereco = df[~df['ENDERECO'].str.startswith(('E', 'N', '5'), na=False)]
     df_endereco['ENDERECO'] = df_endereco['ENDERECO'].str.replace(' 0,00000', '')
 
